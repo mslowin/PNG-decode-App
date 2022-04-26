@@ -10,7 +10,7 @@ IEND_hex = '0x490x450x4e0x44'
 
 
 image = Image.open('.\\PNG_images\\icon.png')
-# image.show()
+image.show()
 
 file_path = '.\\PNG_images\\icon.png'
 # file_path = '..\\png-is-my-favourite-file-type-master\\png_files\\type_3.png'
@@ -31,7 +31,7 @@ for i in range(len(content)-3):
     # print((str(content[i]) + str(content[i + 1]) + str(content[i + 2]) + str(content[i + 3])))
     if (str(content[i]) + str(content[i + 1]) + str(content[i + 2]) + str(content[i + 3])) == IHDR_hex:
         print()
-        # png.show_ihdr_contents(content)
+        png.show_ihdr_contents(content)
         ihdr_length = png.print_ihdr_data(content, i)
         ihdr_start = 8
         ihdr_end = ihdr_start + 4 + 4 + ihdr_length + 4

@@ -10,22 +10,22 @@ def print_png_data(content):
 
 def image_width(content):
     image_width_hex = (str(content[16])[2:]) + (str(content[17])[2:]) + (str(content[18])[2:]) + (str(content[19])[2:])
-    print('Image width:\t', end=" "), print(int(image_width_hex, 16))
+    print('Image width:\t\t\t\t', end=" "), print(int(image_width_hex, 16))
 
 
 def image_height(content):
     image_height_hex = (str(content[20])[2:]) + (str(content[21])[2:]) + (str(content[22])[2:]) + (str(content[23])[2:])
-    print('Image height:\t', end=" "), print(int(image_height_hex, 16))
+    print('Image height:\t\t\t\t', end=" "), print(int(image_height_hex, 16))
 
 
 def image_bit_depth(content):
     image_bit_depth_hex = str(content[24])[2:]
-    print('Image bit depth:\t', end=" "), print(int(image_bit_depth_hex, 16))
+    print('Image bit depth:\t\t\t', end=" "), print(int(image_bit_depth_hex, 16))
 
 
 def image_colour_type(content):
     image_colour_type_hex = str(content[25])[2:]
-    print('Image colour type:\t', end=" "), print(int(image_colour_type_hex, 16))
+    print('Image colour type:\t\t\t', end=" "), print(int(image_colour_type_hex, 16))
 
 
 def image_compression_method(content):
@@ -35,15 +35,16 @@ def image_compression_method(content):
 
 def image_filter_method(content):
     image_filter_method_hex = str(content[27])[2:]
-    print('Image filter method:\t', end=" "), print(int(image_filter_method_hex, 16))
+    print('Image filter method:\t\t', end=" "), print(int(image_filter_method_hex, 16))
 
 
 def image_interlace_method(content):
     image_interlace_method_hex = str(content[28])[2:]
-    print('Image interlace method:\t', end=" "), print(int(image_interlace_method_hex, 16))
+    print('Image interlace method:\t\t', end=" "), print(int(image_interlace_method_hex, 16))
 
 
 def show_ihdr_contents(content):
+    print('Information from image header:')
     image_width(content)
     image_height(content)
     image_bit_depth(content)
@@ -51,6 +52,7 @@ def show_ihdr_contents(content):
     image_compression_method(content)
     image_filter_method(content)
     image_interlace_method(content)
+    print()
 
 
 def print_ihdr_data(content, i):
