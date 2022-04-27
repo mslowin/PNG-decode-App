@@ -8,6 +8,8 @@ PLTE_hex = '0x500x4c0x540x45'
 IDAT_hex = '0x490x440x410x54'
 IEND_hex = '0x490x450x4e0x44'
 
+tEXt_hex = '0x740x450x580x74'
+
 
 image = Image.open('.\\PNG_images\\icon.png')
 image.show()
@@ -23,9 +25,11 @@ with open(file_path, 'rb') as file:
 
 i = 0
 x = 0
-
+flag = 0
 idat_start = []
 idat_end = []
+
+text_length = 'brak tekstu'
 
 for i in range(len(content)-3):
     # print((str(content[i]) + str(content[i + 1]) + str(content[i + 2]) + str(content[i + 3])))
@@ -54,6 +58,12 @@ for i in range(len(content)-3):
         iend_length = png.print_iend_data(content, i)
         iend_start = i - 4
         iend_end = iend_start + 3 + 4 + iend_length + 4
+        print()
+    if (str(content[i]) + str(content[i + 1]) + str(content[i + 2]) + str(content[i + 3])) == tEXt_hex:
+        print()
+        text_length = png.print_text_data(content, i)
+        text_start = i - 4
+        text_end = text_start + 3 + 4 + text_length + 4
         print()
 
 

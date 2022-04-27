@@ -113,3 +113,30 @@ def print_iend_data(content, i):
             j = 0
             print()
     return iend_length
+
+def print_text_data(content, i):
+    j = 0
+    read_text = ""
+    text_length = content[i - 4][2:] + content[i - 3][2:] + content[i - 2][2:] + content[i - 1][2:]
+    text_length = int(text_length, 16)
+
+    text_begin = i + 4  # begining of text [length]i > [tEXt]here > [text][crc]
+    text_end = i + 4 + text_length  # end of text [length][tEXt][text] < here[crc]
+    text = ''
+    print('tEXt chunk length: ', end=" "), print(text_length, end=" "), print(' bytes')
+    for a in range(text_length + 4 + 4 + 4):  # metadata_length + 4 bytes length + 4 bytes name + 4 bytes CRC
+        tmp = content[i][2:]
+        if text_begin <= i < text_end:
+            if content[i][2:] == '0':  # when its 0 bytes.fromhex(tmp).decode('utf-8') crashes
+                text += ' '
+            else:
+                text += bytes.fromhex(tmp).decode('utf-8')  # converts hex to utf-8 characters
+        print(content[i - 4], end=" ")
+        i += 1
+        j += 1
+        if j == 16:
+            j = 0
+            print()
+    print()
+    print(text)
+    return text_length
