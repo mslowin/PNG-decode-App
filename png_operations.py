@@ -76,7 +76,7 @@ def print_idat_data(content, i):
     idat_length = int(idat_length, 16)
     print('IDAT chunk length: ', end=" "), print(idat_length, end=" "), print(' bytes')
     for a in range(idat_length + 4 + 4 + 4):  # metadata_length + 4 bytes length + 4 bytes name + 4 bytes CRC
-        print(content[i-4], end=" ")
+        print(content[i - 4], end=" ")
         i += 1
         j += 1
         if j == 16:
@@ -91,7 +91,7 @@ def print_plte_data(content, i):
     plte_length = int(plte_length, 16)
     print('PLTE chunk length: ', end=" "), print(plte_length, end=" "), print(' bytes')
     for a in range(plte_length + 4 + 4 + 4):  # metadata_length + 4 bytes length + 4 bytes name + 4 bytes CRC
-        print(content[i-4], end=" ")
+        print(content[i - 4], end=" ")
         i += 1
         j += 1
         if j == 16:
@@ -106,7 +106,7 @@ def print_iend_data(content, i):
     iend_length = int(iend_length, 16)
     print('IEND chunk length: ', end=" "), print(iend_length, end=" "), print(' bytes')
     for a in range(iend_length + 4 + 4 + 4):  # metadata_length + 4 bytes length + 4 bytes name + 4 bytes CRC
-        print(content[i-4], end=" ")
+        print(content[i - 4], end=" ")
         i += 1
         j += 1
         if j == 16:
@@ -114,9 +114,10 @@ def print_iend_data(content, i):
             print()
     return iend_length
 
+
 def print_text_data(content, i):
     j = 0
-    read_text = ""
+    # read_text = ""
     text_length = content[i - 4][2:] + content[i - 3][2:] + content[i - 2][2:] + content[i - 1][2:]
     text_length = int(text_length, 16)
 
@@ -140,3 +141,62 @@ def print_text_data(content, i):
     print()
     print(text)
     return text_length
+
+
+def print_time_data(content, i):
+    j = 0
+    str_day = str_month = ' '
+    year = hour = minute = second = 0
+    time_marge_index = 0
+    time_length = content[i - 4][2:] + content[i - 3][2:] + content[i - 2][2:] + content[i - 1][2:]
+    time_length = int(time_length, 16)
+    print('tIME chunk length: ', end=" "), print(time_length, end=" "), print(' bytes')
+    for a in range(time_length + 4 + 4 + 4):  # metadata_length + 4 bytes length + 4 bytes name + 4 bytes CRC
+        print(content[i - 4], end=" ")
+        i += 1
+        j += 1
+        time_marge_index += 1
+        if time_marge_index == 8:  # after 4 bytes of length and 4 bytes of tIME name
+            year = int(str(content[i - 4][2:] + content[i - 3][2:]), 16)
+            month = int(str(content[i - 2][2:]), 16)
+            if month < 10:
+                str_month = '0' + str(month)
+            else:
+                str_month = str(month)
+            day = int(str(content[i - 1][2:]), 16)
+            if day < 10:
+                str_day = '0' + str(day)
+            else:
+                str_day = str(day)
+            hour = int(str(content[i][2:]), 16)
+            minute = int(str(content[i + 1][2:]), 16)
+            second = int(str(content[i + 2][2:]), 16)
+        if j == 16:
+            j = 0
+            print()
+    print(), print('Data extracted from tIME:')
+    print('Last image modification:', end=" ")
+    print(str_day, end="."), print(str_month, end=".")
+    print(year, end=" "), print(hour, end=":")
+    print(minute, end=":"), print(second)
+    return time_length
+
+
+def save_critical_chunk_to_tmp(content, start, end):
+    tmp = ''
+    for e in range(start, end):
+        if len(content[e][2:]) < 2:         # important for writing to a file and changing text to hex
+            tmp += '0' + content[e][2:]
+        else:
+            tmp += content[e][2:]
+    return tmp
+
+
+def extract_image_info(content):
+    tmp = ''
+    for e in range(0, 8):
+        if len(content[e][2:]) < 2:         # important for writing to a file and changing text to hex
+            tmp += '0' + content[e][2:]
+        else:
+            tmp += content[e][2:]
+    return tmp
