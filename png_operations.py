@@ -139,7 +139,7 @@ def print_text_data(content, i):
             j = 0
             print()
     print()
-    print(text)
+    print(text, end=" ")
     return text_length
 
 
@@ -178,7 +178,7 @@ def print_time_data(content, i):
     print('Last image modification:', end=" ")
     print(str_day, end="."), print(str_month, end=".")
     print(year, end=" "), print(hour, end=":")
-    print(minute, end=":"), print(second)
+    print(minute, end=":"), print(second, end=" ")
     return time_length
 
 
