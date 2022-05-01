@@ -14,7 +14,7 @@ tIME_hex = '0x740x490x4d0x45'
 
 
 image = Image.open('.\\PNG_images\\icon.png')
-# image.show()
+image.show()
 
 file_path = '.\\PNG_images\\icon.png'
 
