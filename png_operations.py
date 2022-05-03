@@ -9,38 +9,63 @@ def print_png_data(content):
 
 
 def image_width(content):
-    image_width_hex = (str(content[16])[2:]) + (str(content[17])[2:]) + (str(content[18])[2:]) + (str(content[19])[2:])
-    print('Image width:\t\t\t\t', end=" "), print(int(image_width_hex, 16))
+    tmp = ''
+    for e in range(16, 20):
+        if len(content[e][2:]) < 2:
+            tmp += '0' + content[e][2:]
+        else:
+            tmp += content[e][2:]
+    print('Image width:\t\t\t\t', end=" "), print(int(tmp, 16))
 
 
 def image_height(content):
-    image_height_hex = (str(content[20])[2:]) + (str(content[21])[2:]) + (str(content[22])[2:]) + (str(content[23])[2:])
-    print('Image height:\t\t\t\t', end=" "), print(int(image_height_hex, 16))
+    tmp = ''
+    for e in range(20, 24):
+        if len(content[e][2:]) < 2:
+            tmp += '0' + content[e][2:]
+        else:
+            tmp += content[e][2:]
+    print('Image width:\t\t\t\t', end=" "), print(int(tmp, 16))
 
 
 def image_bit_depth(content):
-    image_bit_depth_hex = str(content[24])[2:]
-    print('Image bit depth:\t\t\t', end=" "), print(int(image_bit_depth_hex, 16))
+    if len(content[24][2:]) < 2:
+        tmp = '0' + content[24][2:]
+    else:
+        tmp = content[24][2:]
+    print('Image bit depth:\t\t\t', end=" "), print(int(tmp, 16))
 
 
 def image_colour_type(content):
-    image_colour_type_hex = str(content[25])[2:]
-    print('Image colour type:\t\t\t', end=" "), print(int(image_colour_type_hex, 16))
+    if len(content[25][2:]) < 2:
+        tmp = '0' + content[25][2:]
+    else:
+        tmp = content[25][2:]
+    print('Image colour type:\t\t\t', end=" "), print(int(tmp, 16))
 
 
 def image_compression_method(content):
-    image_compression_method_hex = str(content[26])[2:]
-    print('Image compression method:\t', end=" "), print(int(image_compression_method_hex, 16))
+    if len(content[26][2:]) < 2:
+        tmp = '0' + content[26][2:]
+    else:
+        tmp = content[26][2:]
+    print('Image compression method:\t', end=" "), print(int(tmp, 16))
 
 
 def image_filter_method(content):
-    image_filter_method_hex = str(content[27])[2:]
-    print('Image filter method:\t\t', end=" "), print(int(image_filter_method_hex, 16))
+    if len(content[27][2:]) < 2:
+        tmp = '0' + content[27][2:]
+    else:
+        tmp = content[27][2:]
+    print('Image filter method:\t\t', end=" "), print(int(tmp, 16))
 
 
 def image_interlace_method(content):
-    image_interlace_method_hex = str(content[28])[2:]
-    print('Image interlace method:\t\t', end=" "), print(int(image_interlace_method_hex, 16))
+    if len(content[28][2:]) < 2:
+        tmp = '0' + content[28][2:]
+    else:
+        tmp = content[28][2:]
+    print('Image interlace method:\t\t', end=" "), print(int(tmp, 16))
 
 
 def show_ihdr_contents(content):

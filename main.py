@@ -1,8 +1,13 @@
-# import numpy as np
+import numpy as np
 # import sys
 import binascii
-from PIL import Image
 import png_operations as png
+import matplotlib.pyplot as plt
+from PIL import Image
+from skimage.io import imread, imshow
+from skimage.color import rgb2hsv, rgb2gray, rgb2yuv
+from skimage import color, exposure, transform
+from skimage.exposure import equalize_hist
 
 IHDR_hex = '0x490x480x440x52'
 PLTE_hex = '0x500x4c0x540x45'
@@ -13,13 +18,14 @@ tEXt_hex = '0x740x450x580x74'
 tIME_hex = '0x740x490x4d0x45'
 
 
-image = Image.open('.\\PNG_images\\icon.png')
-image.show()
+image = Image.open('.\\PNG_images\\ball.png')
+# image.show()
 
-file_path = '.\\PNG_images\\icon.png'
+file_path = '.\\PNG_images\\ball.png'
 
 with open(file_path, 'rb') as file:
     content = [hex(a) for a in file.read()]
+
 
 # png.print_png_data(content)
 
@@ -92,11 +98,13 @@ file.close()
 # print(image_info)
 # print(tmp)
 
+
+# putting together whole PNG file data, (first 8 bytes of png file which are always the same + the rest of the file):
 tmp = image_info + tmp
 tmp = tmp.strip()
-tmp = tmp.replace(' ', '')
+tmp = tmp.replace(' ', '')   # getting rid of all unnecessary spaces and end of lines
 tmp = tmp.replace('\n', '')
-tmp = binascii.a2b_hex(tmp)
+tmp = binascii.a2b_hex(tmp)  # changing hex data to binascii
 with open('.\\PNG_images\\icon-po-anonimizacji.png', 'wb') as file2:
     file2.write(tmp)
 
@@ -104,8 +112,14 @@ file2.close()
 
 # png_operations.print_png_data(content)
 
-# a = np.fft.fft2([[1, 2], [3, 4]])
-# print()
-# print(a)
-# print(np.fft.fftshift(a))
-# print(np.abs(a))
+image2 = imread('.\\PNG_images\\ball.png')
+
+plt.figure()
+plt.imshow(image2, cmap='gray')
+
+image2_fourier = np.fft.fftshift(np.fft.fft2(image2))
+out = np.log(abs(image2_fourier))
+
+plt.figure()
+plt.imshow(out, cmap='gray')
+plt.show()
