@@ -11,6 +11,7 @@ IEND_hex = '0x490x450x4e0x44'
 
 tEXt_hex = '0x740x450x580x74'
 tIME_hex = '0x740x490x4d0x45'
+gAMA_hex = '0x670x410x4d0x41'
 
 
 image = Image.open('.\\PNG_images\\icon.png')
@@ -84,6 +85,14 @@ for i in range(len(content)-3):
         time_start = i - 4
         time_end = time_start + 4 + 4 + time_length + 4
         print()
+    if (str(content[i]) + str(content[i + 1]) + str(content[i + 2]) + str(content[i + 3])) == gAMA_hex:
+        print()
+        gama_start = i - 4
+        gama_end = gama_start + 4 + 4 + 4 + 4
+        gama = content[i + 4][2:] + content[i + 5][2:] + content[i + 6][2:] + content[i + 7][2:]
+        gama = int(gama, 16)
+        gama = gama/100000
+        print("Gamma value: ", end=" "), print(gama)
 
 file.close()
 # print(), print(critical_chunks_space)
