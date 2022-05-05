@@ -297,3 +297,29 @@ def print_phys_data(content, i):
             j = 0
             print()
     return phys_length
+
+def print_bkgd_data(content, i):
+    j = 0
+    bkgd_length = content[i - 4][2:] + content[i - 3][2:] + content[i - 2][2:] + content[i - 1][2:]
+    bkgd_length = int(bkgd_length, 16)
+    if bkgd_length == 2:
+        colour = content[i + 4] + content[i + 5][2:]
+    else:
+        if bkgd_length == 1:
+            colour = content[i + 4]
+        else:
+            x = content[i + 4] + content[i + 5][2:]
+            y = content[i + 4] + content[i + 5][2:]
+            z = content[i + 4] + content[i + 5][2:]
+            colour = "X:" + x + " Y:" + y + " Z:" + z
+
+    print("Background colour: ", end=" "), print(colour)
+    print('bKGD chunk length: ', end=" "), print(bkgd_length, end=" "), print(' bytes')
+    for a in range(bkgd_length + 4 + 4 + 4):  # metadata_length + 4 bytes length + 4 bytes name + 4 bytes CRC
+        print(content[i - 4], end=" ")
+        i += 1
+        j += 1
+        if j == 16:
+            j = 0
+            print()
+    return bkgd_length

@@ -19,6 +19,7 @@ tIME_hex = '0x740x490x4d0x45'
 gAMA_hex = '0x670x410x4d0x41'
 cHRM_hex = '0x630x480x520x4d'
 pHYs_hex = '0x700x480x590x73'
+bKGD_hex = '0x620x4b0x470x44'
 
 
 image = Image.open('.\\PNG_images\\easyPNG.png')
@@ -110,6 +111,12 @@ for i in range(len(content)-3):
         pHYS_start = i - 4
         pHYs_length = png.print_phys_data(content, i)
         pHys_end = pHYS_start + 4 + 4 + pHYs_length + 4
+        print()
+    if (str(content[i]) + str(content[i + 1]) + str(content[i + 2]) + str(content[i + 3])) == bKGD_hex:
+        print()
+        bKGD_start = i - 4
+        bKGD_length = png.print_bkgd_data(content, i)
+        bKGD_end = bKGD_start + 4 + 4 + bKGD_length + 4
         print()
 
 file.close()
