@@ -231,6 +231,10 @@ def print_gama_data(content, i):
     j = 0
     gama_length = content[i - 4][2:] + content[i - 3][2:] + content[i - 2][2:] + content[i - 1][2:]
     gama_length = int(gama_length, 16)
+    gama = content[i + 4][2:] + content[i + 5][2:] + content[i + 6][2:] + content[i + 7][2:]
+    gama = int(gama, 16)
+    gama = gama / 100000
+    print("Gamma value: ", end=" "), print(gama)
     print('gAMA chunk length: ', end=" "), print(gama_length, end=" "), print(' bytes')
     for a in range(gama_length + 4 + 4 + 4):  # metadata_length + 4 bytes length + 4 bytes name + 4 bytes CRC
         print(content[i - 4], end=" ")
@@ -265,3 +269,31 @@ def print_chrm_data(content, i):
             j = 0
             print()
     return chrm_length
+
+
+def print_phys_data(content, i):
+    j = 0
+    phys_length = content[i - 4][2:] + content[i - 3][2:] + content[i - 2][2:] + content[i - 1][2:]
+    phys_length = int(phys_length, 16)
+    phys_chunks = ['Pixels per unit X', 'Pixels per unit Y']
+    it = 4
+
+    for x in phys_chunks:
+        value = content[i + it][2:] + content[i + it + 1][2:] + content[i + it + 2][2:] + content[i + it + 3][2:]
+        value = int(value, 16)
+        print(x, end=" "), print("=", end=" "), print(value)
+        it = it + 4
+    unit_specifier = int(content[i + it], 16)
+    if  unit_specifier == 1:
+        print("Per meter")
+    else:
+        print("No unit specified!")
+    print('pHYs chunk length: ', end=" "), print(phys_length, end=" "), print(' bytes')
+    for a in range(phys_length + 4 + 4 + 4):  # metadata_length + 4 bytes length + 4 bytes name + 4 bytes CRC
+        print(content[i - 4], end=" ")
+        i += 1
+        j += 1
+        if j == 16:
+            j = 0
+            print()
+    return phys_length
