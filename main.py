@@ -4,10 +4,8 @@ import binascii
 import png_operations as png
 import matplotlib.pyplot as plt
 from PIL import Image
-from skimage.io import imread, imshow
-from skimage.color import rgb2hsv, rgb2gray, rgb2yuv
-from skimage import color, exposure, transform
-from skimage.exposure import equalize_hist
+from skimage.io import imread
+import cv2
 
 IHDR_hex = '0x490x480x440x52'
 PLTE_hex = '0x500x4c0x540x45'
@@ -21,15 +19,13 @@ cHRM_hex = '0x630x480x520x4d'
 pHYs_hex = '0x700x480x590x73'
 bKGD_hex = '0x620x4b0x470x44'
 
-
-image = Image.open('.\\PNG_images\\easyPNG.png')
+image = Image.open('.\\PNG_images\\icon.png')  # image to read data from
 # image.show()
 
-file_path = '.\\PNG_images\\easyPNG.png'
+file_path = '.\\PNG_images\\icon.png'
 
 with open(file_path, 'rb') as file:
     content = [hex(a) for a in file.read()]
-
 
 # png.print_png_data(content)
 
@@ -45,7 +41,7 @@ tmp = ''
 text_length = 'brak tekstu'
 image_info = png.extract_image_info(content)
 
-for i in range(len(content)-3):
+for i in range(len(content) - 3):
     # print((str(content[i]) + str(content[i + 1]) + str(content[i + 2]) + str(content[i + 3])))
     if (str(content[i]) + str(content[i + 1]) + str(content[i + 2]) + str(content[i + 3])) == IHDR_hex:
         print()
@@ -64,15 +60,15 @@ for i in range(len(content)-3):
         critical_chunks_space += (plte_end - plte_start)
         tmp += png.save_critical_chunk_to_tmp(content, plte_start, plte_end)
         print()
-    # if (str(content[i]) + str(content[i + 1]) + str(content[i + 2]) + str(content[i + 3])) == IDAT_hex:
-    #     print()
-    #     idat_length = png.print_idat_data(content, i)
-    #     idat_start.append(i - 4)
-    #     idat_end.append(idat_start[x] + 4 + 4 + idat_length + 4)
-    #     critical_chunks_space += (idat_end[x] - idat_start[x])
-    #     tmp += png.save_critical_chunk_to_tmp(content, idat_start[x], idat_end[x])
-    #     print()
-    #     x += 1
+    if (str(content[i]) + str(content[i + 1]) + str(content[i + 2]) + str(content[i + 3])) == IDAT_hex:
+        print()
+        idat_length = png.print_idat_data(content, i)
+        idat_start.append(i - 4)
+        idat_end.append(idat_start[x] + 4 + 4 + idat_length + 4)
+        critical_chunks_space += (idat_end[x] - idat_start[x])
+        tmp += png.save_critical_chunk_to_tmp(content, idat_start[x], idat_end[x])
+        print()
+        x += 1
     if (str(content[i]) + str(content[i + 1]) + str(content[i + 2]) + str(content[i + 3])) == IEND_hex:
         print()
         iend_length = png.print_iend_data(content, i)
@@ -120,34 +116,40 @@ for i in range(len(content)-3):
         print()
 
 file.close()
-# print(), print(critical_chunks_space)
-# print()
-# print()
-# print(image_info)
-# print(tmp)
-
 
 # putting together whole PNG file data, (first 8 bytes of png file which are always the same + the rest of the file):
 tmp = image_info + tmp
 tmp = tmp.strip()
-tmp = tmp.replace(' ', '')   # getting rid of all unnecessary spaces and end of lines
+tmp = tmp.replace(' ', '')  # getting rid of all unnecessary spaces and end of lines
 tmp = tmp.replace('\n', '')
 tmp = binascii.a2b_hex(tmp)  # changing hex data to binascii
-with open('.\\PNG_images\\icon-po-anonimizacji.png', 'wb') as file2:
+with open('.\\PNG_images\\icon-po-anonimizacji.png', 'wb') as file2:  # creation of a new file in which w put tmp data
     file2.write(tmp)
 
 file2.close()
 
 # png_operations.print_png_data(content)
 
-image2 = imread('.\\PNG_images\\ball.png')
+image2 = imread('.\\PNG_images\\ball.png')  # image to be transformed
 
 plt.figure()
-plt.imshow(image2, cmap='gray')
+plt.imshow(image2, cmap='gray')  # displaying original image
 
 image2_fourier = np.fft.fftshift(np.fft.fft2(image2))
 out = np.log(abs(image2_fourier))
 
+# Phase of a transformed image
+imgFloat32 = np.float32(image2)  # Convert image to float32
+dft = cv2.dft(imgFloat32, flags=cv2.DFT_COMPLEX_OUTPUT)  # Fourier transform
+dftShift = np.fft.fftshift(dft)  # Move the low frequency component to the center of the frequency domain image
+dftAmp = cv2.magnitude(dft[:, :, 0], dft[:, :, 1])  # Amplitude spectrum, decentralized
+phase = np.arctan2(dftShift[:, :, 1], dftShift[:, :, 0])  # Calculated phase angle (radian system)
+dftPhi = phase / np.pi * 180  # Convert phase angle to [- 180, 180]
+
+plt.figure(figsize=(9, 6))
+plt.title("DFT Phase"), plt.axis('off')
+plt.imshow(dftPhi)
+
 plt.figure()
-plt.imshow(out, cmap='gray')
+plt.imshow(out, cmap='gray')  # displaying image after fourier transform
 plt.show()
